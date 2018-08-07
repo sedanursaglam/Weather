@@ -1,0 +1,310 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hava Durumu</title>
+    <link rel="stylesheet" href="css/hava_durumu.css">
+    <link href="https://fonts.googleapis.com/css?family=Arbutus+Slab|Arimo" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script>
+
+        $(function setDay() {
+            let text;
+            let currentDay = new Date().getDay();
+            let days = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
+
+            text1 = days[currentDay];
+            text2 = days[(currentDay + 1) % 7];
+            text3 = days[(currentDay + 2) % 7];
+            text4 = days[(currentDay + 3) % 7];
+            text5 = days[(currentDay + 4) % 7];
+
+            $("#date1").html(text1);
+            $("#date2").html(text2);
+            $("#date3").html(text3);
+            $("#date4").html(text4);
+            $("#date5").html(text5);
+
+        });
+
+        $(function currentWeather() {
+            $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=Ankara,tr&units=metric&lang=tr&APPID=056386c7208231bf6491ffc5fb1d7a63",
+                function (data) {
+
+                    let imageSource = "image/sunny.png";
+                    let backgroun_img = "default_background";
+                    let a = data.weather[0].id;
+                    let b = data.weather[0].icon;
+
+
+                    switch (a / 100) {
+                        case 2:
+                            imageSource = "image/storm.png"
+                            backgroun_img = "thunderstorm"
+                            break;
+                        case 3:
+                            imageSource = "image/rain.png"
+                            backgroun_img = "rain_"
+                            break;
+                        case 6:
+                            imageSource = "image/snow.png"
+                            backgroun_img = "snow"
+                            break;
+                        case 7:
+                            imageSource = "image/foggy.png"
+                            backgroun_img = "mist"
+                            break;
+                    }
+
+                    switch (a / 10) {
+                        case 50:
+                            imageSource = "image/sunny_rain.png"
+                            backgroun_img = "rain"
+                            break;
+                        case 51:
+                            imageSource = "image/snow.png"
+                            backgroun_img = "snow"
+                            break;
+                        case 52:
+                            imageSource = "image/rain.png"
+                            backgroun_img = "rain_"
+                            break;
+                    }
+
+                    switch (a) {
+                        case 802:
+                            imageSource = "image/cloud.png";
+                            backgroun_img = "scattered_clouds"
+
+                            break;
+                        case 803:
+                            imageSource = "image/storm.png";
+                            backgroun_img = "overcast_clouds"
+                            break;
+                        case 804:
+                            imageSource = "image/storm.png";
+                            backgroun_img = "overcast_clouds"
+                            break;
+                    }
+
+                    switch (b) {
+                        case "01d":
+                            imageSource = "image/sunny.png";
+                            backgroun_img = "clear_sky"
+                            break;
+                        case "01n":
+                            imageSource = "image/moon.png";
+                            backgroun_img = "nigh_clear_sky"
+                            break;
+                        case "02d":
+                            imageSource = "image/cloudy.png";
+                            backgroun_img = "sun_clouds"
+                            break;
+                        case "02n":
+                            imageSource = "image/night.png";
+                            backgroun_img = "night_clouds"
+                            break;
+                    }
+
+                    $("#show").html(titleCase(data.weather[0].description));
+                    $("#temp").html(data.main.temp.toFixed(1) + "°");
+                    $("#image").attr('src', imageSource);
+                    $("#back").css('backgroundImage', 'url(background/' + backgroun_img + '.jpeg)');
+                    $("#humidity").html('Nem: ' + data.main.humidity + ' %');
+                    $("#wind").html('Rüzgar: ' + data.wind.speed + ' m/s');
+                    $("#pressure").html('Atmosfer Basıncı: ' + data.main.pressure + ' hPa');
+
+                })
+            function titleCase(str) {
+                let splitStr = str.toLowerCase().split(' ');
+                for (var i = 0; i < splitStr.length; i++) {
+                    // You do not need to check if i is larger than splitStr length, as your for does that for you
+                    // Assign it back to the array
+                    splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+                }
+                // Directly return the joined string
+                return splitStr.join(' ');
+            }
+        });
+
+        $(function currentDayTempandDesc() {
+            $.getJSON("http://api.openweathermap.org/data/2.5/forecast?q=Ankara,tr&units=metric&lang=tr&APPID=056386c7208231bf6491ffc5fb1d7a63",
+                function (demo) {
+
+                    for (i = 0; i < demo.list.length; i = i + 8) {
+                        let weatherImagle = "image/sunny.png";
+                        let backgroundImage = "default_background";
+                        let weatherId = demo.list[i].weather[0].id;
+                        let weatherIcon = demo.list[i].weather[0].icon;
+
+                        switch (weatherId / 100) {
+                            case 2:
+                                weatherImagle = "image/storm.png"
+                                break;
+                            case 3:
+                                weatherImagle = "image/rain.png"
+                                break;
+                            case 6:
+                                weatherImagle = "image/snow.png"
+                                break;
+                            case 7:
+                                weatherImagle = "image/foggy.png"
+                                break;
+                        }
+
+                        switch (weatherId / 10) {
+                            case 50:
+                                weatherImagle = "image/sunny_rain.png"
+                                break;
+                            case 51:
+                                weatherImagle = "image/snow.png"
+                                break;
+                            case 52:
+                                weatherImagle = "image/rain.png"
+                                break;
+                        }
+
+                        switch (weatherId) {
+                            case 802:
+                                weatherImagle = "image/cloud.png";
+                                break;
+                            case 803:
+                                weatherImagle = "image/storm.png";
+                                break;
+                            case 804:
+                                weatherImagle = "image/storm.png";
+                                break;
+                        }
+
+                        switch (weatherIcon) {
+                            case "01d":
+                                weatherImagle = "image/sunny.png";
+                                break;
+                            case "01n":
+                                weatherImagle = "image/moon.png";
+                                break;
+                            case "02d":
+                                weatherImagle = "image/cloudy.png";
+                                break;
+                            case "02n":
+                                weatherImagle = "image/night.png";
+                                break;
+                        }
+
+                        switch (i) {
+                            case 8:
+                                $("#first-day").html(titleCase(demo.list[i].weather[0].description));
+                                $("#first-degree").html(demo.list[i].main.temp_max.toFixed(1) + "°" + "/" + demo.list[i].main.temp_min.toFixed(1) + "°");
+                                $("#first-img").attr('src', weatherImagle);
+                                break;
+                            case 16:
+                                $("#second-day").html(titleCase(demo.list[i].weather[0].description));
+                                $("#second-degree").html(demo.list[i].main.temp_max.toFixed(1) + "°" + "/" + demo.list[i].main.temp_min.toFixed(1) + "°");
+                                $("#second-img").attr('src', weatherImagle);
+                                break;
+                            case 24:
+                                $("#third-day").html(titleCase(demo.list[i].weather[0].description));
+                                $("#third-degree").html(demo.list[i].main.temp_max.toFixed(1) + "°" + "/" + demo.list[i].main.temp_min.toFixed(1) + "°");
+                                $("#third-img").attr('src', weatherImagle);
+                                break;
+                            case 32:
+                                $("#fourth-day").html(titleCase(demo.list[i].weather[0].description));
+                                $("#fourth-degree").html(demo.list[i].main.temp_max.toFixed(1) + "°" + "/" + demo.list[i].main.temp_min.toFixed(1) + "°");
+                                $("#fourth-img").attr('src', weatherImagle);
+                                break;
+
+                        }
+
+
+                    };
+
+                    function titleCase(a) {
+                        let splitStr = a.toLowerCase().split(' ');
+                        for (var i = 0; i < splitStr.length; i++) {
+                            // You do not need to check if i is larger than splitStr length, as your for does that for you
+                            // Assign it back to the array
+                            splitStr[i] = splitStr[i].charAt(0).toUpperCase() + splitStr[i].substring(1);
+                        }
+                        // Directly return the joined string
+                        return splitStr.join(' ');
+                    }
+                })
+
+        });
+
+
+    </script>
+</head>
+
+<body id="back" style="background: no-repeat center center fixed; background-size: cover;">
+
+    <div class="big-title">ANKARA</div>
+
+    <div class="days-box">
+        <div class="today-box">
+            <div id="date1" class="small-title"></div>
+            <div class="today-image-box">
+                <img id="image" width="100%" height="100%">
+            </div>
+            <div id="temp" class="today-degree"></div>
+            <div id="show" class="today-comment"></div>
+            <div id="humidity" class="text" style="margin: 15% 0 0 10%;"></div>
+            <div id="wind" class="text"></div>
+            <div id="pressure" class="text"></div>
+        </div>
+
+        <div class="container">
+            <div class="grid">
+                <div class="grid-item">
+                    <div id="date2" class="small-title"></div>
+                    <div class="image-box">
+                        <img id="first-img" style="width: 100%; height: 100%;"> </div>
+                    <div>
+                        <div class="degree-title">En Yüksek/En Düşük</div>
+                        <div id="first-degree" class="degree"></div>
+                        <div id="first-day" class="comment"></div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div id="date3" class="small-title"></div>
+                    <div class="image-box">
+                        <img id="second-img" style="width: 100%; height: 100%;"> </div>
+                    <div>
+                        <div class="degree-title">En Yüksek/En Düşük</div>
+                        <div id="second-degree" class="degree"></div>
+                        <div id="second-day" class="comment"></div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div id="date4" class="small-title"></div>
+                    <div class="image-box">
+                        <img id="third-img" style="width: 100%; height: 100%;">
+                    </div>
+                    <div>
+                        <div class="degree-title">En Yüksek/En Düşük</div>
+                        <div id="third-degree" class="degree"></div>
+                        <div id="third-day" class="comment"></div>
+                    </div>
+                </div>
+
+                <div class="grid-item">
+                    <div id="date5" class="small-title"></div>
+                    <div class="image-box">
+                        <img id="fourth-img" style="width: 100%; height: 100%;">
+                    </div>
+                    <div>
+                        <div class="degree-title">En Yüksek/En Düşük</div>
+                        <div id="fourth-degree" class="degree"></div>
+                        <div id="fourth-day" class="comment"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
