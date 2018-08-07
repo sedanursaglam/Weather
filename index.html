@@ -29,7 +29,7 @@
         });
 
         $(function currentWeather() {
-            $.getJSON("http://api.openweathermap.org/data/2.5/weather?q=Ankara,tr&units=metric&lang=tr&APPID=056386c7208231bf6491ffc5fb1d7a63",
+            $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Ankara,tr&units=metric&lang=tr&APPID=056386c7208231bf6491ffc5fb1d7a63",
                 function (data) {
 
                     let imageSource = "image/sunny.png";
@@ -129,7 +129,7 @@
         });
 
         $(function currentDayTempandDesc() {
-            $.getJSON("http://api.openweathermap.org/data/2.5/forecast?q=Ankara,tr&units=metric&lang=tr&APPID=056386c7208231bf6491ffc5fb1d7a63",
+            $.getJSON("https://api.openweathermap.org/data/2.5/forecast?q=Ankara,tr&units=metric&lang=tr&APPID=056386c7208231bf6491ffc5fb1d7a63",
                 function (demo) {
 
                     for (i = 0; i < demo.list.length; i = i + 8) {
