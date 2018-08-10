@@ -8,8 +8,12 @@
     <link href="https://fonts.googleapis.com/css?family=Arbutus+Slab|Arimo" rel="stylesheet">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script>
-
-        $(function setDay() {
+      $(function(){
+        setDay();
+        currentWeather();
+        currentDayTempandDesc();
+      });
+        function setDay() {
             let text;
             let currentDay = new Date().getDay();
             let days = ["Pazar", "Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi"];
@@ -26,69 +30,18 @@
             $("#date4").html(text4);
             $("#date5").html(text5);
 
-        });
+        };
 
-        $(function currentWeather() {
+        function currentWeather() {
             $.getJSON("https://api.openweathermap.org/data/2.5/weather?q=Ankara,tr&units=metric&lang=tr&APPID=056386c7208231bf6491ffc5fb1d7a63",
                 function (data) {
 
                     let imageSource = "image/sunny.png";
                     let backgroun_img = "default_background";
-                    let a = data.weather[0].id;
-                    let b = data.weather[0].icon;
-
-
-                    switch (a / 100) {
-                        case 2:
-                            imageSource = "image/storm.png"
-                            backgroun_img = "thunderstorm"
-                            break;
-                        case 3:
-                            imageSource = "image/rain.png"
-                            backgroun_img = "rain_"
-                            break;
-                        case 6:
-                            imageSource = "image/snow.png"
-                            backgroun_img = "snow"
-                            break;
-                        case 7:
-                            imageSource = "image/foggy.png"
-                            backgroun_img = "mist"
-                            break;
-                    }
-
-                    switch (a / 10) {
-                        case 50:
-                            imageSource = "image/sunny_rain.png"
-                            backgroun_img = "rain"
-                            break;
-                        case 51:
-                            imageSource = "image/snow.png"
-                            backgroun_img = "snow"
-                            break;
-                        case 52:
-                            imageSource = "image/rain.png"
-                            backgroun_img = "rain_"
-                            break;
-                    }
+                    let a = data.weather[0].icon;
+                    console.log(a);
 
                     switch (a) {
-                        case 802:
-                            imageSource = "image/cloud.png";
-                            backgroun_img = "scattered_clouds"
-
-                            break;
-                        case 803:
-                            imageSource = "image/storm.png";
-                            backgroun_img = "overcast_clouds"
-                            break;
-                        case 804:
-                            imageSource = "image/storm.png";
-                            backgroun_img = "overcast_clouds"
-                            break;
-                    }
-
-                    switch (b) {
                         case "01d":
                             imageSource = "image/sunny.png";
                             backgroun_img = "clear_sky"
@@ -105,6 +58,62 @@
                             imageSource = "image/night.png";
                             backgroun_img = "night_clouds"
                             break;
+                        case "03d":
+                            imageSource = "image/cloud.png";
+                            backgroun_img = "scattered_clouds"
+                            break;
+                        case "03n":
+                            imageSource = "image/cloud.png";
+                            backgroun_img = "night_scattered_clouds"
+                            break;
+                        case "04d":
+                            imageSource = "image/cloud.png";
+                            backgroun_img = "overcast_clouds"
+                            break;
+                        case "04n":
+                            imageSource = "image/cloud.png";
+                            backgroun_img = "night_scattered_clouds"
+                            break;
+                        case "09d":
+                            imageSource = "image/rain.png"
+                            backgroun_img = "rain_"
+                            break;
+                        case "09n":
+                            imageSource = "image/rain.png"
+                            backgroun_img = "night_rain_"
+                            break;
+                        case "10d":
+                            imageSource = "image/sunny_rain.png"
+                            backgroun_img = "rain"
+                            break;
+                        case "10n":
+                            imageSource = "image/night_rain.png"
+                            backgroun_img = "night_rain"
+                            break;
+                        case "11d":
+                            imageSource = "image/storm.png"
+                            backgroun_img = "thunderstorm"
+                            break;
+                        case "11n":
+                            imageSource = "image/storm.png"
+                            backgroun_img = "thunderstorm"
+                            break;
+                        case "13d":
+                            imageSource = "image/snow.png"
+                            backgroun_img = "snow"
+                            break;
+                        case "13n":
+                            imageSource = "image/snow.png"
+                            backgroun_img = "night_snow"
+                            break;
+                        case "50d":
+                            imageSource = "image/foggy.png"
+                            backgroun_img = "mist"
+                            break;
+                        case "50n":
+                            imageSource = "image/foggy.png"
+                            backgroun_img = "mist"
+                            break;
                     }
 
                     $("#show").html(titleCase(data.weather[0].description));
@@ -116,7 +125,8 @@
                     $("#pressure").html('Atmosfer Basıncı: ' + data.main.pressure + ' hPa');
 
                 })
-            function titleCase(str) {
+        };
+        function titleCase(str) {
                 let splitStr = str.toLowerCase().split(' ');
                 for (var i = 0; i < splitStr.length; i++) {
                     // You do not need to check if i is larger than splitStr length, as your for does that for you
@@ -126,56 +136,15 @@
                 // Directly return the joined string
                 return splitStr.join(' ');
             }
-        });
 
-        $(function currentDayTempandDesc() {
+        function currentDayTempandDesc() {
             $.getJSON("https://api.openweathermap.org/data/2.5/forecast?q=Ankara,tr&units=metric&lang=tr&APPID=056386c7208231bf6491ffc5fb1d7a63",
                 function (demo) {
 
                     for (i = 0; i < demo.list.length; i = i + 8) {
                         let weatherImagle = "image/sunny.png";
-                        let backgroundImage = "default_background";
-                        let weatherId = demo.list[i].weather[0].id;
                         let weatherIcon = demo.list[i].weather[0].icon;
 
-                        switch (weatherId / 100) {
-                            case 2:
-                                weatherImagle = "image/storm.png"
-                                break;
-                            case 3:
-                                weatherImagle = "image/rain.png"
-                                break;
-                            case 6:
-                                weatherImagle = "image/snow.png"
-                                break;
-                            case 7:
-                                weatherImagle = "image/foggy.png"
-                                break;
-                        }
-
-                        switch (weatherId / 10) {
-                            case 50:
-                                weatherImagle = "image/sunny_rain.png"
-                                break;
-                            case 51:
-                                weatherImagle = "image/snow.png"
-                                break;
-                            case 52:
-                                weatherImagle = "image/rain.png"
-                                break;
-                        }
-
-                        switch (weatherId) {
-                            case 802:
-                                weatherImagle = "image/cloud.png";
-                                break;
-                            case 803:
-                                weatherImagle = "image/storm.png";
-                                break;
-                            case 804:
-                                weatherImagle = "image/storm.png";
-                                break;
-                        }
 
                         switch (weatherIcon) {
                             case "01d":
@@ -190,8 +159,49 @@
                             case "02n":
                                 weatherImagle = "image/night.png";
                                 break;
+                            case "03d":
+                                weatherImagle = "image/cloud.png";
+                                break;
+                            case "03n":
+                                weatherImagle = "image/cloud.png";
+                                break;
+                            case "04d":
+                                weatherImagle = "image/cloud.png";
+                                break;
+                            case "04n":
+                                weatherImagle = "image/cloud.png";
+                                break;
+                            case "09d":
+                                weatherImagle = "image/rain.png"
+                                break;
+                            case "09n":
+                                weatherImagle = "image/rain.png"
+                                break;
+                            case "10d":
+                                weatherImagle = "image/sunny_rain.png"
+                                break;
+                            case "10n":
+                                weatherImagle = "image/night_rain.png"
+                                break;
+                            case "11d":
+                                weatherImagle = "image/storm.png"
+                                break;
+                            case "11n":
+                                weatherImagle = "image/storm.png"
+                                break;
+                            case "13d":
+                                weatherImagle = "image/snow.png"
+                                break;
+                            case "13n":
+                                weatherImagle = "image/snow.png"
+                                break;
+                            case "50d":
+                                weatherImagle = "image/foggy.png"
+                                break;
+                            case "50n":
+                                weatherImagle = "image/foggy.png"
+                                break;
                         }
-
                         switch (i) {
                             case 8:
                                 $("#first-day").html(titleCase(demo.list[i].weather[0].description));
@@ -219,7 +229,9 @@
 
                     };
 
-                    function titleCase(a) {
+                   
+                })
+                function titleCase(a) {
                         let splitStr = a.toLowerCase().split(' ');
                         for (var i = 0; i < splitStr.length; i++) {
                             // You do not need to check if i is larger than splitStr length, as your for does that for you
@@ -229,9 +241,8 @@
                         // Directly return the joined string
                         return splitStr.join(' ');
                     }
-                })
-
-        });
+        };
+    
 
 
     </script>
